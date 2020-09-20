@@ -1,0 +1,67 @@
+﻿@using MyStore_Core3.DomainClasses
+@model MyStore_Core3.DomainClasses.Product
+
+@{
+    ViewData["Title"] = "ویرایش کالا";
+}
+
+<h2 class="text-center">ویرایش کالا</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="form-group">
+                <label asp-for="ProductGroupId" class="control-label"></label>
+                <select asp-for="ProductGroupId" class="form-control" asp-items="ViewBag.ProductGroupId"></select>
+                <span asp-validation-for="ProductGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductPrice" class="control-label"></label>
+                <input asp-for="ProductPrice" class="form-control" />
+                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductImage" class="control-label"></label>
+                <input type="file" name="ImageUp" />
+                <span asp-validation-for="ProductImage" class="text-danger"></span>
+                @if (Model.ProductImage != null)
+                {
+                    <br/>
+                    <img src="/ProductImages/@Model.ProductImage" class="thumbnail" style="max-width: 250px"  />
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProductStock" class="control-label"></label>
+                <input asp-for="ProductStock" class="form-control" />
+                <span asp-validation-for="ProductStock" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductDescription" class="control-label"></label>
+                <textarea asp-for="ProductDescription" class="form-control"></textarea>
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductStatus" class="control-label"></label>
+                <select asp-for="ProductStatus" class="form-control" asp-items="Html.GetEnumSelectList<EnumProductStatusType>()"></select>
+                <span asp-validation-for="ProductStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-sm btn-warning">بازگشت به لیست</a>
+</div>
+

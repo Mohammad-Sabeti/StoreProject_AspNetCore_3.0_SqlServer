@@ -1,0 +1,79 @@
+﻿@model IEnumerable<MyStore_Core3.DomainClasses.Product>
+
+@{
+    ViewData["Title"] = "کالا";
+}
+
+
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن کالا جدید</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductGroup.ProductGroupTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductStatus)
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductGroup.ProductGroupTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductPrice)
+                </td>
+                <td>
+                    <img src="/ProductImages/@item.ProductImage" class="thumbnail" style="max-width: 150px" />
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductStock)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductStatus)
+                </td>
+
+                <td style="width: 205px">
+                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning">ویرایش</a>|
+                    <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-sm btn-info">جزئیات</a>|
+                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger">حذف</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

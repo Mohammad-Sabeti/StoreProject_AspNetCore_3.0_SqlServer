@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MyStore_Core3.DomainClasses.ProductGroup>
+
+@{
+    ViewData["Title"] = "گروه کالا";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">افزودن گروه جدید</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductGroupTitle)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductGroupTitle)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductGroupId" class="btn btn-sm btn-warning">ویرایش</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductGroupId" class="btn btn-sm btn-info">جزئیات</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductGroupId" class="btn btn-sm btn-danger">حذف</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,62 @@
+﻿@using MyStore_Core3.DomainClasses
+@using MyStore_Core3.Utilities
+@using MyStore_Core3.Utilities.Convertor
+@using MyStore_Core3.Utilities.EnumExtensions
+
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "فروشگاه اینترنتی";
+}
+
+<div class="row">
+    <div class="col py-4 px-4">
+        @if (Model.Any())
+        {
+            <div class="row px-3">
+                @foreach (var item in Model)
+                {
+                    <div class="col-4 px-5 py-5">
+                        <a href="/Products/@item.ProductId"
+                           class="product-box btn  btn-outline-secondary">
+                            <span>
+                                <img class="img-thumbnail"
+                                     src="/ProductImages/@item.ProductImage" />
+                            </span>
+                            <br />
+                            <span>@item.ProductName</span>
+                            <br />
+                            <div class="col-6 text-center badge badge-warning" style="margin: 0px;">
+                                @if (item.ProductStatus == EnumProductStatusType.Available)
+                                {
+                                    @item.ProductPrice.Tooman()
+
+
+                                }
+                                else
+                                {
+                                    @EnumProductStatusType.NotAvailable.GetDisplayName()
+                                }
+                            </div>
+                            <div>
+                                @if (item.ProductStatus == EnumProductStatusType.Available)
+                                {
+                                    <span class="badge badge-danger">
+                                        @item.ProductStock
+                                        موجودی کالا
+                                    </span>
+                                }
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-danger">
+                در حال حاضر هیچ کالایی برای نمایش وجود ندارد.
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyStore_Core3.DataLayer\MyStore_Core3.DataLayer.csproj" />
+    <ProjectReference Include="..\MyStore_Core3.DomainClasses\MyStore_Core3.DomainClasses.csproj" />
+    <ProjectReference Include="..\MyStore_Core3.ViewModel\MyStore_Core3.ViewModel.csproj" />
+  </ItemGroup>
+
+</Project>

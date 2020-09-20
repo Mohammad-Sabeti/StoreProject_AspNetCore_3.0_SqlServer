@@ -1,0 +1,103 @@
+﻿@using MyStore_Core3.DomainClasses
+@using MyStore_Core3.Utilities.Convertor
+@using MyStore_Core3.Utilities.EnumExtensions
+@model MyStore_Core3.DomainClasses.Product
+@{
+    ViewData["Title"] = "فروشگاه اینترنتی";
+}
+
+
+
+
+<div class="row py-4">
+    <div class="col-8 item-details">
+        <div class="row px-4">
+            <div class="col-3">
+                <small class="text-muted">
+                    نام محصول :
+                </small>
+            </div>
+            <div class="col-4">
+                @Model.ProductName
+            </div>
+            <div class="w-100 my-1"></div>
+            <div class="col-3">
+                <small class="text-muted">
+                    قیمت محصول :
+                </small>
+            </div>
+            <div class="col-4">
+                @Model.ProductPrice.Tooman()
+
+            </div>
+            <div class="w-100 my-1"></div>
+            <div class="col-3">
+                <small class="text-muted">
+                    موجودی در انبار :
+                </small>
+            </div>
+            <div class="col-4">
+                @Model.ProductStock
+                تعداد
+            </div>
+            <div class="w-100 my-1"></div>
+            <div class="col-3">
+                <small class="text-muted">
+                    شرح محصول:
+                </small>
+            </div>
+            <div class="col-9 item-text-box">
+                @Model.ProductDescription
+            </div>
+            <hr/>
+            <div class="col-5">
+                <form asp-action="OrderCreate" asp-route-productId="@Model.ProductId" asp-route-sell_count="sell_count" method="post" class="form-inline">
+                    <select asp-for="ProductStock" name="sell_count" class="form-control form-control-sm ml-2"  asp-items="new List<SelectListItem>(Model.ProductStock)">
+                    </select>
+
+                    <button type="submit" class="btn btn-sm btn-success my-1" href="#">
+                        خرید کالا
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="container col-4 text-center  ">
+        <div class="container-fluid btn-outline-secondary img-thumbnail  ">
+            <img class="img-thumbnail col-6
+              col-6 text-center " src="/ProductImages/@Model.ProductImage" alt="@Model.ProductName"
+                 style="padding: 0px;margin: 0px;">
+            <div class="col-6 text-center badge badge-warning" style="margin: 0px;">
+                @if (@Model.ProductStatus == EnumProductStatusType.Available)
+                {
+                @Model.ProductPrice.Tooman()
+                }
+                else
+                {
+                    @EnumProductStatusType.NotAvailable.GetDisplayName()
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

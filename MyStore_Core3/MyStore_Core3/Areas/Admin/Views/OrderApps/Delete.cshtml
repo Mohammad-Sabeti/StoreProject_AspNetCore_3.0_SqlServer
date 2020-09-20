@@ -1,0 +1,45 @@
+﻿@model MyStore_Core3.DomainClasses.OrderApp
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2 class="text-center">حذف سفارش</h2>
+
+<h3>آیا از حذف سفارش مطمئن هستید؟</h3>
+<div>
+
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CustomerId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Product)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.ProductName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SellCount)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SellCount)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderTime)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="OrderAppId" />
+        <input type="submit" value="حذف" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-sm btn-info">بازگشت به لیست</a>
+    </form>
+</div>

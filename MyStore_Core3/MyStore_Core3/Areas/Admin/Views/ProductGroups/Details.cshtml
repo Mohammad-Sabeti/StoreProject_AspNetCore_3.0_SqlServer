@@ -1,0 +1,23 @@
+﻿@model MyStore_Core3.DomainClasses.ProductGroup
+
+@{
+    ViewData["Title"] = "جزئیات";
+}
+<h2>جزئیات خبر @Model.ProductGroupTitle</h2>
+<div>
+
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ProductGroupTitle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ProductGroupTitle)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ProductGroupId" class="btn btn-sm btn-warning">ویرایش</a> |
+    <a asp-action="Index" class="btn btn-sm btn-info">بازگشت به لیست</a>
+</div>
