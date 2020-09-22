@@ -1,4 +1,6 @@
-﻿@model MyStore_Core3.DomainClasses.ProductGroup
+﻿@model MyStore_Core3.ViewModel.ProductGroupViewModel
+
+
 
 @{
     ViewData["Title"] = "افزودن گروه جدید";
@@ -28,3 +30,8 @@
     <a asp-action="Index">بازگشت به لیست</a>
 </div>
 
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

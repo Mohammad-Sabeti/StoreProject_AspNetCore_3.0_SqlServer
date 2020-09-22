@@ -1,39 +1,43 @@
-﻿@model MyStore_Core3.DomainClasses.OrderApp
-
+﻿@using MyStore_Core3.Utilities.Convertor
+@model MyStore_Core3.ViewModel.OrderAppViewModel
 @{
     ViewData["Title"] = "جزئیات سفارش";
 }
 
 <h2>جزئیات سفارش </h2>
 
+
 <div>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Customer)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CustomerId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.CustomerName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Product)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Product.ProductName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SellCount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SellCount)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OrderTime)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderTime)
+        <dd class="col-sm-10">
+            @DateTime.Parse(Model.OrderTime).ToShamsi()
         </dd>
     </dl>
+
+
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.OrderAppId" class="btn btn-sm btn-warning">ویرایش</a> |

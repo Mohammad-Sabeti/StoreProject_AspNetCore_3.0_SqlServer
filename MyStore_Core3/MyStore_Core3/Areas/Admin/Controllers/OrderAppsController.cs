@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MyStore_Core3.DataLayer.Context;
 using MyStore_Core3.DomainClasses;
 using MyStore_Core3.Services.Repositories;
+using MyStore_Core3.ViewModel;
 
 namespace MyStore_Core3.Areas.Admin.Controllers
 {
@@ -17,21 +19,23 @@ namespace MyStore_Core3.Areas.Admin.Controllers
     {
         private IOrderAppRepository _orderAppRepository;
         private IProductRepository _productRepository;
-
         private UserManager<IdentityUser> _userManager;
+        private IMapper _mapper;
 
-        public OrderAppsController(IOrderAppRepository orderAppRepository, IProductRepository productRepository, UserManager<IdentityUser> userManager)
+        public OrderAppsController(IOrderAppRepository orderAppRepository, IProductRepository productRepository, UserManager<IdentityUser> userManager, IMapper mapper)
         {
             _orderAppRepository = orderAppRepository;
             _productRepository = productRepository;
             _userManager = userManager;
+            _mapper = mapper;
         }
         // GET: Admin/OrderApps
         public async Task<IActionResult> Index()
         {
-            // ViewData["CustomerId"] = new SelectList(_userManager.Users, "CustomerId", "UserName", orderApp.CustomerId);
+            var orderApps = _orderAppRepository.GetAllEntities().ToList();
+            var orderAppsModel = _mapper.Map<List<OrderApp>, List<OrderAppViewModel>>(orderApps);
             ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName");
-            return View(_orderAppRepository.GetAllEntities());
+            return View(orderAppsModel);
         }
 
         // GET: Admin/OrderApps/Details/5
@@ -43,10 +47,11 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             }
 
             var orderApp = _orderAppRepository.GetEntityById(id.Value);
+            var orderAppsModel = _mapper.Map<OrderAppViewModel>(orderApp);
 
-            return View(orderApp);
+            return View(orderAppsModel);
         }
-
+        //Todo:Do It
         // GET: Admin/OrderApps/Create
         public IActionResult Create()
         {
@@ -62,17 +67,18 @@ namespace MyStore_Core3.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderAppId,CustomerId,ProductId,SellCount,OrderTime")] OrderApp orderApp)
+        public async Task<IActionResult> Create(OrderAppViewModel orderAppViewModel)
         {
             if (ModelState.IsValid)
             {
-                _orderAppRepository.InsertEntity(orderApp);
+                var orderAppsModel = _mapper.Map<OrderApp>(orderAppViewModel);
+                _orderAppRepository.InsertEntity(orderAppsModel);
                 _orderAppRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_userManager.Users, "CustomerId", "UserName", orderApp.CustomerId);
-            ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName", orderApp.ProductId);
-            return View(orderApp);
+            ViewData["CustomerId"] = new SelectList(_userManager.Users, "CustomerId", "UserName", orderAppViewModel.CustomerId);
+            ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName", orderAppViewModel.ProductId);
+            return View(orderAppViewModel);
         }
 
         // GET: Admin/OrderApps/Edit/5
@@ -88,9 +94,11 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            var orderAppsModel = _mapper.Map<OrderAppViewModel>(orderApp);
+
             ViewData["CustomerId"] = new SelectList(_userManager.Users, "Id", "UserName", orderApp.CustomerId);
             ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName", orderApp.ProductId);
-            return View(orderApp);
+            return View(orderAppsModel);
         }
 
         // POST: Admin/OrderApps/Edit/5
@@ -98,9 +106,9 @@ namespace MyStore_Core3.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderAppId,CustomerId,ProductId,SellCount,OrderTime")] OrderApp orderApp)
+        public async Task<IActionResult> Edit(int id, OrderAppViewModel orderAppViewModel)
         {
-            if (id != orderApp.OrderAppId)
+            if (id != orderAppViewModel.OrderAppId)
             {
                 return NotFound();
             }
@@ -109,12 +117,14 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             {
                 try
                 {
-                    _orderAppRepository.UpdateEntity(orderApp);
+                    var orderAppsModel = _mapper.Map<OrderApp>(orderAppViewModel);
+
+                    _orderAppRepository.UpdateEntity(orderAppsModel);
                     _orderAppRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderAppExists(orderApp.OrderAppId))
+                    if (!OrderAppExists(orderAppViewModel.OrderAppId))
                     {
                         return NotFound();
                     }
@@ -125,9 +135,9 @@ namespace MyStore_Core3.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_userManager.Users, "Id", "UserName", orderApp.CustomerId);
-            ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName", orderApp.ProductId);
-            return View(orderApp);
+            ViewData["CustomerId"] = new SelectList(_userManager.Users, "Id", "UserName", orderAppViewModel.CustomerId);
+            ViewData["ProductId"] = new SelectList(_productRepository.GetAllEntities(), "ProductId", "ProductName", orderAppViewModel.ProductId);
+            return View(orderAppViewModel);
         }
 
         // GET: Admin/OrderApps/Delete/5
@@ -139,12 +149,14 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             }
 
             var orderApp = _orderAppRepository.GetEntityById(id.Value);
+            var orderAppsModel = _mapper.Map<OrderAppViewModel>(orderApp);
+
             if (orderApp == null)
             {
                 return NotFound();
             }
 
-            return View(orderApp);
+            return View(orderAppsModel);
         }
 
         // POST: Admin/OrderApps/Delete/5

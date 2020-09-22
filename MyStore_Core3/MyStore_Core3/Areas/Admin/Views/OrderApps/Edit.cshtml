@@ -1,4 +1,8 @@
-﻿@model MyStore_Core3.DomainClasses.OrderApp
+﻿@model MyStore_Core3.ViewModel.OrderAppViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
 
 @{
     ViewData["Title"] = "ویرایش سفارش";
@@ -43,3 +47,7 @@
     <a asp-action="Index" class="btn btn-sm btn-warning">بازگشت به لیست</a>
 </div>
 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

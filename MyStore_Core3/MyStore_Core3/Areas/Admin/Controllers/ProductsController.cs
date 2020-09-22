@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using MyStore_Core3.DataLayer.Context;
 using MyStore_Core3.DomainClasses;
 using MyStore_Core3.Services.Repositories;
+using MyStore_Core3.ViewModel;
 
 namespace MyStore_Core3.Areas.Admin.Controllers
 {
@@ -18,16 +20,21 @@ namespace MyStore_Core3.Areas.Admin.Controllers
     {
         private IProductRepository _productRepository;
         private IProductGroupRepository _productGroupRepository;
-        public ProductsController(IProductRepository productRepository, IProductGroupRepository productGroupRepository)
+        private IMapper _mapper;
+
+        public ProductsController(IProductRepository productRepository, IProductGroupRepository productGroupRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _productGroupRepository = productGroupRepository;
+            _mapper = mapper;
         }
 
         // GET: Admin/Products
         public async Task<IActionResult> Index()
         {
-            return View(_productRepository.GetAllEntities());
+            var product = _productRepository.GetAllEntities().ToList();
+            var model = _mapper.Map<List<Product>, List<DetailsProductViewModel>>(product);
+            return View(model);
         }
 
         // GET: Admin/Products/Details/5
@@ -39,13 +46,14 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             }
 
             var product = _productRepository.GetEntityById(id.Value);
+            var productModel = _mapper.Map<DetailsProductViewModel>(product);
 
             if (product == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(productModel);
         }
 
         // GET: Admin/Products/Create
@@ -60,7 +68,7 @@ namespace MyStore_Core3.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductGroupId,ProductName,ProductPrice,ProductImage,ProductStock,ProductDescription,ProductStatus")] Product product, IFormFile imageUp)
+        public async Task<IActionResult> Create(CreateProductViewModel createProductViewModel, IFormFile imageUp)
         {
             if (ModelState.IsValid)
             {
@@ -69,12 +77,12 @@ namespace MyStore_Core3.Areas.Admin.Controllers
                 {
 
 
-                    product.ProductImage = Guid.NewGuid().ToString() + Path.GetExtension(imageUp.FileName);
+                    createProductViewModel.ProductImage = Guid.NewGuid().ToString() + Path.GetExtension(imageUp.FileName);
 
 
 
                     string savePath = Path.Combine(
-                        Directory.GetCurrentDirectory(), "wwwroot/ProductImages", product.ProductImage
+                        Directory.GetCurrentDirectory(), "wwwroot/ProductImages", createProductViewModel.ProductImage
                     );
 
                     await using var stream = new FileStream(savePath, FileMode.Create);
@@ -86,12 +94,13 @@ namespace MyStore_Core3.Areas.Admin.Controllers
 
                 }
 
+                var product = _mapper.Map<Product>(createProductViewModel);
                 _productRepository.InsertEntity(product);
                 _productRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductGroupId"] = new SelectList(_productGroupRepository.GetAllEntities(), "ProductGroupId", "ProductGroupTitle", product.ProductGroupId);
-            return View(product);
+            ViewData["ProductGroupId"] = new SelectList(_productGroupRepository.GetAllEntities(), "ProductGroupId", "ProductGroupTitle", createProductViewModel.ProductGroupId);
+            return View(createProductViewModel);
         }
 
         // GET: Admin/Products/Edit/5
@@ -107,8 +116,11 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            var productModel = _mapper.Map<DetailsProductViewModel>(product);
+
             ViewData["ProductGroupId"] = new SelectList(_productGroupRepository.GetAllEntities(), "ProductGroupId", "ProductGroupTitle", product.ProductGroupId);
-            return View(product);
+            return View(productModel);
         }
 
         // POST: Admin/Products/Edit/5
@@ -116,9 +128,9 @@ namespace MyStore_Core3.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductGroupId,ProductName,ProductPrice,ProductImage,ProductStock,ProductDescription,ProductStatus")] Product product, IFormFile ImageUp)
+        public async Task<IActionResult> Edit(int id,DetailsProductViewModel detailsProductViewModel, IFormFile ImageUp)
         {
-            if (id != product.ProductId)
+            if (id != detailsProductViewModel.ProductId)
             {
                 return NotFound();
             }
@@ -129,14 +141,14 @@ namespace MyStore_Core3.Areas.Admin.Controllers
                 {
                     if (ImageUp != null)
                     {
-                        if(product.ProductImage == null)
+                        if(detailsProductViewModel.ProductImage == null)
                         {
-                            product.ProductImage = Guid.NewGuid().ToString() + Path.GetExtension(ImageUp.FileName);
+                            detailsProductViewModel.ProductImage = Guid.NewGuid().ToString() + Path.GetExtension(ImageUp.FileName);
 
                         }
 
                         string savePath = Path.Combine(
-                            Directory.GetCurrentDirectory(), "wwwroot/ProductImages", product.ProductImage
+                            Directory.GetCurrentDirectory(), "wwwroot/ProductImages", detailsProductViewModel.ProductImage
                         );
 
                         await using (var stream = new FileStream(savePath, FileMode.Create))//ذخیره ی عکس
@@ -146,12 +158,14 @@ namespace MyStore_Core3.Areas.Admin.Controllers
 
 
                     }
-                    _productRepository.UpdateEntity(product);
+                    var productModel = _mapper.Map<Product>(detailsProductViewModel);
+
+                    _productRepository.UpdateEntity(productModel);
                     _productRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(detailsProductViewModel.ProductId))
                     {
                         return NotFound();
                     }
@@ -162,8 +176,8 @@ namespace MyStore_Core3.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductGroupId"] = new SelectList(_productGroupRepository.GetAllEntities(), "ProductGroupId", "ProductGroupTitle", product.ProductGroupId);
-            return View(product);
+            ViewData["ProductGroupId"] = new SelectList(_productGroupRepository.GetAllEntities(), "ProductGroupId", "ProductGroupTitle", detailsProductViewModel.ProductGroupId);
+            return View(detailsProductViewModel);
         }
 
         // GET: Admin/Products/Delete/5
@@ -175,12 +189,13 @@ namespace MyStore_Core3.Areas.Admin.Controllers
             }
 
             var product = _productRepository.GetEntityById(id.Value);
+            var productModel = _mapper.Map<DetailsProductViewModel>(product);
             if (product == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(productModel);
         }
 
         // POST: Admin/Products/Delete/5

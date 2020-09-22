@@ -1,9 +1,9 @@
-﻿@model MyStore_Core3.DomainClasses.OrderApp
+﻿@using MyStore_Core3.Utilities.Convertor
+@model MyStore_Core3.ViewModel.OrderAppViewModel
 
 @{
     ViewData["Title"] = "Delete";
 }
-
 <h2 class="text-center">حذف سفارش</h2>
 
 <h3>آیا از حذف سفارش مطمئن هستید؟</h3>
@@ -11,32 +11,32 @@
 
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Customer)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CustomerId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.CustomerName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Product)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Product.ProductName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SellCount)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SellCount)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.OrderTime)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderTime)
+        <dd class="col-sm-10">
+            @DateTime.Parse(Model.OrderTime).ToShamsi()
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="OrderAppId" />
         <input type="submit" value="حذف" class="btn btn-danger" /> |

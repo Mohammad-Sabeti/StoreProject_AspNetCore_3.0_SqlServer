@@ -1,4 +1,5 @@
-﻿@model MyStore_Core3.DomainClasses.ProductGroup
+﻿@model MyStore_Core3.ViewModel.ProductGroupViewModel
+
 
 @{
     ViewData["Title"] = "جزئیات";
@@ -21,3 +22,6 @@
     <a asp-action="Edit" asp-route-id="@Model.ProductGroupId" class="btn btn-sm btn-warning">ویرایش</a> |
     <a asp-action="Index" class="btn btn-sm btn-info">بازگشت به لیست</a>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

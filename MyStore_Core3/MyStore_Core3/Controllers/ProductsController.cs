@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStore_Core3.DomainClasses;
 using MyStore_Core3.Services.Repositories;
+using MyStore_Core3.ViewModel;
 
 namespace MyStore_Core3.Controllers
 {
@@ -17,12 +19,14 @@ namespace MyStore_Core3.Controllers
         private IProductRepository _productRepository;
         private IOrderAppRepository _orderAppRepository;
         private UserManager<IdentityUser> _userManager;
+        private IMapper _mapper;
 
-        public ProductsController(IProductRepository productRepository, IOrderAppRepository orderAppRepository, UserManager<IdentityUser> userManager)
+        public ProductsController(IProductRepository productRepository, IOrderAppRepository orderAppRepository, UserManager<IdentityUser> userManager, IMapper mapper)
         {
             _productRepository = productRepository;
             _orderAppRepository = orderAppRepository;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
 
@@ -47,13 +51,14 @@ namespace MyStore_Core3.Controllers
         [Route("Order/{productId}/{sell_count}")]
         public IActionResult OrderCreate(int productId,int sell_count)
         {
-            var orderApp=new OrderApp()
+            var orderAppViewModel=new OrderAppViewModel()
             {
                  CustomerId = _userManager.GetUserId(this.User),
                  ProductId = productId,
                  OrderTime = DateTime.Now.ToString(),
                  SellCount = sell_count
             };
+            var orderApp = _mapper.Map<OrderApp>(orderAppViewModel);
             if (ModelState.IsValid)
             {
                 _orderAppRepository.InsertEntity(orderApp);

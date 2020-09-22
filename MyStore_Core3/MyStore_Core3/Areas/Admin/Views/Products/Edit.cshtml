@@ -1,5 +1,5 @@
 ﻿@using MyStore_Core3.DomainClasses
-@model MyStore_Core3.DomainClasses.Product
+@model MyStore_Core3.ViewModel.DetailsProductViewModel
 
 @{
     ViewData["Title"] = "ویرایش کالا";
@@ -9,13 +9,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductId" />
             <div class="form-group">
-                <label asp-for="ProductGroupId" class="control-label"></label>
-                <select asp-for="ProductGroupId" class="form-control" asp-items="ViewBag.ProductGroupId"></select>
-                <span asp-validation-for="ProductGroupId" class="text-danger"></span>
+                <label asp-for="ProductId" class="control-label"></label>
+                <input asp-for="ProductId" class="form-control" readonly="readonly" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
@@ -23,22 +22,24 @@
                 <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ProductGroupId" class="control-label"></label>
+                <select asp-for="ProductGroupId" class="form-control" asp-items="ViewBag.ProductGroupId"></select>                <span asp-validation-for="ProductGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="ProductPrice" class="control-label"></label>
                 <input asp-for="ProductPrice" class="form-control" />
                 <span asp-validation-for="ProductPrice" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <label asp-for="ProductImage" class="control-label"></label>
                 <input type="file" name="ImageUp" />
                 <span asp-validation-for="ProductImage" class="text-danger"></span>
                 @if (Model.ProductImage != null)
                 {
-                    <br/>
-                    <img src="/ProductImages/@Model.ProductImage" class="thumbnail" style="max-width: 250px"  />
+                    <br />
+                    <img src="/ProductImages/@Model.ProductImage" class="thumbnail" style="max-width: 250px" />
                 }
             </div>
-
             <div class="form-group">
                 <label asp-for="ProductStock" class="control-label"></label>
                 <input asp-for="ProductStock" class="form-control" />
@@ -65,3 +66,6 @@
     <a asp-action="Index" class="btn btn-sm btn-warning">بازگشت به لیست</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
