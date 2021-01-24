@@ -18,6 +18,7 @@ using MyStore_Core3.DomainClasses;
 using MyStore_Core3.Mapping;
 using MyStore_Core3.Services.Repositories;
 using MyStore_Core3.Services.Services;
+using Serilog;
 
 namespace MyStore_Core3
 {
@@ -42,7 +43,9 @@ namespace MyStore_Core3
             services.AddDbContext<MyStore_Core3DbContext>(options =>  
                 options.UseSqlServer(Configuration.GetConnectionString("MyStore_Core3DbContext"))
             );
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            // services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //     .AddEntityFrameworkStores<MyStore_Core3DbContext>();
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MyStore_Core3DbContext>();
             // services.AddIdentity<Customer,IdentityRole>().AddEntityFrameworkStores<MyStore_Core3DbContext>().AddDefaultTokenProviders();
             services.AddControllersWithViews();
@@ -53,10 +56,15 @@ namespace MyStore_Core3
             services.AddTransient<IProductGroupRepository, ProductGroupRepository>();
             services.AddTransient<IOrderAppRepository, OrderAppRepository>();
             services.AddAutoMapper(typeof(Maps));
+            // services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager
+            )
         {
             if (env.IsDevelopment())
             {
@@ -73,11 +81,13 @@ namespace MyStore_Core3
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSerilogRequestLogging();
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            SeedData.Seed(userManager,roleManager);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

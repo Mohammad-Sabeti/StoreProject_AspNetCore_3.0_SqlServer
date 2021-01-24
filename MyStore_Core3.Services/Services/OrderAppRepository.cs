@@ -67,5 +67,12 @@ namespace MyStore_Core3.Services.Services
         {
             _db.SaveChanges();
         }
+
+        public ICollection<OrderApp> GetAllOrdersOfOneUserByUserId(string userId)
+        {
+            var orderList = _db.OrderApps.Include(c => c.Customer).Include(p => p.Product)
+                .Where(o => o.CustomerId == userId).ToList();
+            return orderList;
+        }
     }
 }

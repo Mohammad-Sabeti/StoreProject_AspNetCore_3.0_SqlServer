@@ -9,23 +9,48 @@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
             <i class="fa fa-user" aria-hidden="true"></i>
-            <b>@User.Identity.Name</b>
-            <b>خوش آمدید</b>
+            @{
+                if (User.IsInRole("Creator"))
+                {
+                    <b style="font-size: small">@User.Identity.Name</b>
+                    <b style="font-size: small">برنامه نویس سایت </b>
+                }
+                else if (User.IsInRole("Administrator"))
+                {
+                    <b style="font-size: small">@User.Identity.Name</b>
+                    <b style="font-size: small">ادمین سایت </b>
+                }
+                else
+                {
+                    <b style="font-size: small">@User.Identity.Name</b>
+                    <b style="font-size: small">خوش آمدید</b>
+                }
+            }
+
         </a>
     </li>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            <button type="submit" class="nav-link btn btn-link text-dark" style="font-size: small">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                خروج از حساب کاربری
+            </button>
         </form>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" style="font-size: small">
+            <i class="fa fa-id-card-o" aria-hidden="true"></i>
+            ثبت نام در سایت
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" style="font-size: small">
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+            ورود
+        </a>
     </li>
 }
 </ul>

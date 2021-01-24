@@ -1,0 +1,69 @@
+﻿@using MyStore_Core3.Utilities.Convertor
+@using MyStore_Core3.Utilities.EnumExtensions
+@using MyStore_Core3.DomainClasses
+@model IEnumerable<MyStore_Core3.ViewModel.DetailsProductViewModel>
+@{
+    ViewData["Title"] = "جستجو";
+}
+
+<section class="last-news-section border-radius margin-top-60">
+    <header><i class="icons icon-doc-2"></i>  <h3>نتایج جستجو</h3> </header>
+    <div class="row">
+        <div class="col py-4 px-4">
+            @if (Model.Any())
+            {
+                <div class="row px-3">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-4 px-5 py-5">
+                            <a href="/Products/@item.ProductId"
+                               class="product-box btn  btn-outline-secondary">
+                                <span>
+                                    <img class="img-thumbnail"
+                                         src="/ProductImages/@item.ProductImage" />
+                                </span>
+                                <br />
+                                <span>@item.ProductName</span>
+                                <br />
+                                <div class="col-6 text-center badge badge-warning" style="margin: 0px;">
+                                    @if (item.ProductStatus == EnumProductStatusType.Available)
+                                    {
+                                        @item.ProductPrice.Tooman()
+                                    }
+                                    else
+                                    {
+                                        @EnumProductStatusType.NotAvailable.GetDisplayName()
+                                    }
+                                </div>
+                                <div>
+                                    @if (item.ProductStatus == EnumProductStatusType.Available)
+                                    {
+                                        <span class="badge badge-danger">
+                                            @item.ProductStock
+                                            موجودی کالا
+                                        </span>
+                                    }
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    محصولی برای نمایش یافت نشد
+                    !
+                </div>
+            }
+        </div>
+    </div>
+
+</section>
+
+
+
+
+
+
+

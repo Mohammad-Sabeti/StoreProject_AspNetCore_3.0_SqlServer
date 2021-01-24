@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,6 +17,8 @@ using MyStore_Core3.ViewModel;
 namespace MyStore_Core3.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Administrator")]
+
     public class ProductsController : Controller
     {
         private IProductRepository _productRepository;

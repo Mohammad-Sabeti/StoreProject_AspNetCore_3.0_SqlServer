@@ -6,31 +6,31 @@ using Microsoft.EntityFrameworkCore;
 using MyStore_Core3.DataLayer.Context;
 using MyStore_Core3.DomainClasses;
 using MyStore_Core3.Services.Repositories;
-using MyStore_Core3.Services.SearchContexts;
+
 
 namespace MyStore_Core3.Services.Services
 {
-   public class ProductRepository:IProductRepository
+    public class ProductRepository : IProductRepository
     {
         private MyStore_Core3DbContext _db;
 
         public ProductRepository(MyStore_Core3DbContext db)
         {
-            
+
             _db = db;
         }
 
         public ICollection<Product> GetProductsByGroupId(int groupId)
         {
-            var result= GetAllEntities().Where(p => p.ProductGroupId == groupId).ToList();
+            var result = GetAllEntities().Where(p => p.ProductGroupId == groupId).ToList();
             return result;
         }
 
         public ICollection<Product> GetLateProducts()
         {
 
-                var result=_db.Products.OrderByDescending(p => p.ProductId).Take(4).ToList();
-                return result;
+            var result = _db.Products.OrderByDescending(p => p.ProductId).Take(4).ToList();
+            return result;
 
         }
 
@@ -40,6 +40,18 @@ namespace MyStore_Core3.Services.Services
                 p.ProductName.Contains(parameter) || p.ProductDescription.Contains(parameter)).ToList().Distinct();
 
             return search;
+        }
+
+        public void UpdateStockProduct(int productId, int sellCount)
+        {
+            var product = GetEntityById(productId);
+            var newStock = product.ProductStock - sellCount;
+            product.ProductStock = newStock;
+            if (product.ProductStock==0)
+            {
+                product.ProductStatus = EnumProductStatusType.NotAvailable;
+            }
+            UpdateEntity(product);
         }
 
         public ICollection<Product> GetAllEntities()
@@ -82,7 +94,7 @@ namespace MyStore_Core3.Services.Services
 
         public bool EntityExists(int entityId)
         {
-            var Exists= _db.Products.Any(p => p.ProductId == entityId);
+            var Exists = _db.Products.Any(p => p.ProductId == entityId);
             return Exists;
         }
 
@@ -91,9 +103,5 @@ namespace MyStore_Core3.Services.Services
             _db.SaveChanges();
         }
 
-        public SearchResult SearchPlus(ProductSearchContext context)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

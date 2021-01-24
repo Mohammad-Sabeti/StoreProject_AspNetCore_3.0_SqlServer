@@ -10,8 +10,8 @@ namespace MyStore_Core3.Utilities.Convertor
         public static string ToShamsi(this DateTime vTime)
         {
             PersianCalendar pcCalendar = new PersianCalendar();
-            return pcCalendar.GetYear(vTime) + "/" + pcCalendar.GetMonth(vTime).ToString("00") + "/" +
-                   pcCalendar.GetDayOfMonth(vTime).ToString("00");
+            return pcCalendar.GetMinute(vTime) + " : " + pcCalendar.GetHour(vTime) + " | " + pcCalendar.GetYear(vTime) + "/" + pcCalendar.GetMonth(vTime).ToString("00") + "/" +
+                   pcCalendar.GetDayOfMonth(vTime).ToString("00") ;
         }
     }
 }

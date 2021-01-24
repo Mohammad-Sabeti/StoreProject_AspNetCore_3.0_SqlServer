@@ -9,7 +9,7 @@ using MyStore_Core3.DomainClasses;
 
 namespace MyStore_Core3.DataLayer.Context
 {
-    //Todo:Changed
+
    public class MyStore_Core3DbContext:IdentityDbContext<IdentityUser>
    {
         public MyStore_Core3DbContext(DbContextOptions<MyStore_Core3DbContext> options):base(options)

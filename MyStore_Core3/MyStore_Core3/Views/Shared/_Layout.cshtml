@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,12 +18,14 @@
     <script src="/js/jquery.min.js"></script>
 
 </head>
-<body dir="rtl">
+<body dir="rtl"  id="mydiv">
 
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MyStore_Core3</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="font-size: small"> فروشگاه اینترنتی تست کالا
+                    :)
+                    </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,33 +33,78 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="col-md-6 col-sm-6 col-xs-12">
+                            <!-- Search form -->
+                            <form class="form-inline" asp-action="Search" asp-controller="ShowProducts" method="get">
+                                <input id="search" class="form-control form-control-sm mr-3 w-75"  name="p"  type="text" placeholder=" جستجو کنید ... "
+                                       aria-label="Search">
+                                <button id="btnSend" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            </form>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" style="font-size: small">
+                                <i class="fa fa-home" aria-hidden="true"></i>
+                                صفحه ی اصلی
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Products" asp-action="Index">Admin-Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="ProductGroups" asp-action="Index">Admin-ProductGroups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="OrderApps" asp-action="Index">Admin-OrderApps</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Products" asp-action="Index" style="font-size: small">مدیریت کالا </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="ProductGroups" asp-action="Index" style="font-size: small">مدیریت گروه کالا </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="OrderApps" asp-action="Index" style="font-size: small">مدیریت سفارشات</a>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="ShowProducts" asp-action="OrderList" style="font-size: small">
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                    سفارشات من
+                                </a>
+                            </li>
+                        }
+
+
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    
+<main>
+    <div class="container margin-top-30">
+        <div class="row">
+
+            <aside class="col-md-2 pull-right">
+
+                <!-- ProductGroup Component view -->
+                @await Component.InvokeAsync("ShowProductGroupComponent")
+                <!-- end ProductGroup Component view -->
+            </aside>
+
+            <div class="col-md-10">
+                @RenderBody()
+            </div>
+
+
+        </div>
+    </div>
+</main>
+
+
+
+
+
+
+
+
+<footer class="border-top footer text-muted">
         <div class="container">
             &copy; 1399 - MyStore_Core3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
@@ -62,10 +112,24 @@
     <script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
     <script src="/js/script.js"></script>
-
-    <script src="/lib/jquery/dist/jquery.min.js"></script>
-
-    <script src="/js/site.js" asp-append-version="true"></script>
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#btnSend').click(function(e) {
+            e.preventDefault();
+            var search = $("#search").val();
+            $.ajax({
+                type: 'Get',
+                url: '@Url.Action("Search","ShowProducts")',
+                data: { p: search }
+            }).done(
+                function (myres) {
+                    $("#mydiv").html(myres);
+                });
+        });
+    });
+</script>
+<script src="/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

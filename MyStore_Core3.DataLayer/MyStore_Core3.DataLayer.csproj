@@ -17,8 +17,4 @@
     <ProjectReference Include="..\MyStore_Core3.DomainClasses\MyStore_Core3.DomainClasses.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

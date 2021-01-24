@@ -21,7 +21,7 @@ namespace MyStore_Core3.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
+        [Display(Name = "نام کابری")]
         public string Username { get; set; }
 
         [TempData]
@@ -33,7 +33,7 @@ namespace MyStore_Core3.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "شماره تماس")]
             public string PhoneNumber { get; set; }
         }
 

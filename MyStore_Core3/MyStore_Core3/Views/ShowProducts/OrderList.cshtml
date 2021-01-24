@@ -1,0 +1,58 @@
+﻿@using MyStore_Core3.Utilities.Convertor
+@model IEnumerable<MyStore_Core3.ViewModel.OrderAppViewModel>
+
+@{
+    ViewData["Title"] = "OrderList";
+}
+<div class="alert alert-info">
+    در حال حاضر
+    @ViewBag.OrdersCount
+    سفارش
+    به نام خانم/آقا
+    @User.Identity.Name
+    ثبت شده است .
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderAppId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SellCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderAppId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SellCount)
+            </td>
+            <td>
+                @DateTime.Parse(item.OrderTime).ToShamsi()
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

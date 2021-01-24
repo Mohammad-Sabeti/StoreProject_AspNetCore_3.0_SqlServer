@@ -1,7 +1,7 @@
 ﻿@using MyStore_Core3.DomainClasses
 @using MyStore_Core3.Utilities.Convertor
 @using MyStore_Core3.Utilities.EnumExtensions
-@model MyStore_Core3.DomainClasses.Product
+@model MyStore_Core3.ViewModel.DetailsProductViewModel
 @{
     ViewData["Title"] = "فروشگاه اینترنتی";
 }
@@ -14,6 +14,7 @@
         <div class="row px-4">
             <div class="col-3">
                 <small class="text-muted">
+                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                     نام محصول :
                 </small>
             </div>
@@ -23,6 +24,7 @@
             <div class="w-100 my-1"></div>
             <div class="col-3">
                 <small class="text-muted">
+                    <i class="fa fa-credit-card" aria-hidden="true"></i>
                     قیمت محصول :
                 </small>
             </div>
@@ -33,16 +35,27 @@
             <div class="w-100 my-1"></div>
             <div class="col-3">
                 <small class="text-muted">
+                    <i class="fa fa-database" aria-hidden="true"></i>
                     موجودی در انبار :
                 </small>
             </div>
             <div class="col-4">
-                @Model.ProductStock
-                تعداد
+                @{
+                    if (Model.ProductStock != 0)
+                    {
+                        @Model.ProductStock
+                        <span> عدد</span>
+                    }
+                    else
+                    {
+                        @EnumProductStatusType.NotAvailable.GetDisplayName()
+                    }
+                }
             </div>
             <div class="w-100 my-1"></div>
             <div class="col-3">
                 <small class="text-muted">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
                     شرح محصول:
                 </small>
             </div>
@@ -50,16 +63,35 @@
                 @Model.ProductDescription
             </div>
             <hr/>
-            <div class="col-5">
-                <form asp-action="OrderCreate" asp-route-productId="@Model.ProductId" asp-route-sell_count="sell_count" method="post" class="form-inline">
-                    <select asp-for="ProductStock" name="sell_count" class="form-control form-control-sm ml-2"  asp-items="new List<SelectListItem>(Model.ProductStock)">
-                    </select>
+            @{
+                if (Model.ProductStock != 0)
+                {
+                    <div class="col-5">
+                        <form asp-action="OrderCreate" asp-route-productId="@Model.ProductId" asp-route-sell_count="sell_count" method="post" class="form-inline">
+                            <select asp-for="ProductStock" name="sell_count" class="form-control form-control-sm ml-2">
+                                @for (int i = 0; i <= Model.ProductStock; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
 
-                    <button type="submit" class="btn btn-sm btn-success my-1" href="#">
-                        خرید کالا
-                    </button>
-                </form>
-            </div>
+                            <button type="submit" class="btn btn-sm btn-success my-1" href="#">
+                                خرید کالا
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-9 text-center badge badge-warning">
+                        @EnumProductStatusType.NotAvailable.GetDisplayName()
+                        
+                    </div>
+                }
+            }
+            
+
+
 
         </div>
     </div>

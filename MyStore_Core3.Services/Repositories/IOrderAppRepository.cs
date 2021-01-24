@@ -7,7 +7,8 @@ namespace MyStore_Core3.Services.Repositories
 {
    public interface IOrderAppRepository:IBaseRepository<OrderApp>
     {
-        // IEnumerable<OrderApp> GetAllOrders();
+
+        ICollection<OrderApp> GetAllOrdersOfOneUserByUserId(string userId);
         // OrderApp GetOrderById(int orderAppId);
         // void InsertOrder(OrderApp orderApp);
         // void UpdateOrder(OrderApp orderApp);

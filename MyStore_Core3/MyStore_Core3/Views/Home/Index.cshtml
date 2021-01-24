@@ -1,9 +1,7 @@
 ﻿@using MyStore_Core3.DomainClasses
-@using MyStore_Core3.Utilities
 @using MyStore_Core3.Utilities.Convertor
 @using MyStore_Core3.Utilities.EnumExtensions
-
-@model IEnumerable<Product>
+@model IEnumerable<MyStore_Core3.ViewModel.DetailsProductViewModel>
 @{
     ViewData["Title"] = "فروشگاه اینترنتی";
 }
@@ -20,17 +18,15 @@
                            class="product-box btn  btn-outline-secondary">
                             <span>
                                 <img class="img-thumbnail"
-                                     src="/ProductImages/@item.ProductImage" />
+                                     src="/ProductImages/@item.ProductImage" style="width: 150px;height: 150px"/>
                             </span>
                             <br />
                             <span>@item.ProductName</span>
                             <br />
-                            <div class="col-6 text-center badge badge-warning" style="margin: 0px;">
+                            <div class="col-10 text-center badge badge-warning" style="margin: 0px;">
                                 @if (item.ProductStatus == EnumProductStatusType.Available)
                                 {
                                     @item.ProductPrice.Tooman()
-
-
                                 }
                                 else
                                 {
@@ -59,4 +55,3 @@
         }
     </div>
 </div>
-

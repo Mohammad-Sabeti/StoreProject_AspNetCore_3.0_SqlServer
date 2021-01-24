@@ -10,7 +10,7 @@ using MyStore_Core3.DataLayer.Context;
 namespace MyStore_Core3.DataLayer.Migrations
 {
     [DbContext(typeof(MyStore_Core3DbContext))]
-    [Migration("20200917081042_MyFirstMigration")]
+    [Migration("20200930063901_MyFirstMigration")]
     partial class MyFirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

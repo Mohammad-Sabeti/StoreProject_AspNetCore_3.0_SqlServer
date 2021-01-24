@@ -16,7 +16,7 @@ namespace MyStore_Core3.Services.Repositories
         // void DeleteProductGroup(int groupId);
         // bool ProductGroupExists(int groupId);
         // void Save();
-        // List<ShowProductGroupsViewModel> GetListGroups();
+        List<ShowProductGroupPartialViewModel> GetListGroupsPartialViewModel();
 
     }
 }

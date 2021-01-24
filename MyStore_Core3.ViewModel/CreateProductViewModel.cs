@@ -18,6 +18,7 @@ namespace MyStore_Core3.ViewModel
 
         [Display(Name = "دسته بندی کالا")]
         public ProductGroupViewModel ProductGroup { get; set; }
+        [Display(Name = "دسته بندی کالا")]
         public int ProductGroupId { get; set; }
 
 

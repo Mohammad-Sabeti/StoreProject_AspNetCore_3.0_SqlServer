@@ -77,5 +77,17 @@ namespace MyStore_Core3.Services.Services
         {
             _db.SaveChanges();
         }
+
+        public List<ShowProductGroupPartialViewModel> GetListGroupsPartialViewModel()
+        {
+            var partialViewModels = _db.ProductGroups.Select(g => new ShowProductGroupPartialViewModel()
+                {
+                    ProductGroupId = g.ProductGroupId,
+                    ProductGroupTitle = g.ProductGroupTitle,
+                    ProductCountInThisGroup = g.RelatedProducts.Count
+                }
+            ).ToList();
+            return partialViewModels;
+        }
     }
 }

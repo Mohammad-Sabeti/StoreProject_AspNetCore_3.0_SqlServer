@@ -11,7 +11,7 @@ namespace MyStore_Core3.ViewModel
    public class OrderAppViewModel
     {
 
-
+        [Display(Name = "کد سفارش")]
         public int OrderAppId { get; set; }
 
 

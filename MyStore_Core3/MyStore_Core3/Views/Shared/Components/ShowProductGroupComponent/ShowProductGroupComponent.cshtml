@@ -1,0 +1,17 @@
+﻿@model List<MyStore_Core3.ViewModel.ShowProductGroupPartialViewModel>
+
+@{
+    ViewData["Title"] = "فروشگاه اینترنتی";
+}
+
+<section class="category-section border-radius table table-hover">
+    <header><i class="fa fa-bookmark-o"></i> <span> دسته بندی ها </span></header>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li class="btn  btn-block  btn-outline-secondary " style="font-size: small; width: 150px;"><a asp-controller="ShowProducts" asp-action="ProductGroupItemList" asp-route-groupId="@item.ProductGroupId" style="font-size: small"><i class="fa fa-bars" aria-hidden="true"></i> @item.ProductGroupTitle <span class="btn btn-sm  btn-outline-danger" style="font-size: smaller;">@item.ProductCountInThisGroup</span></a></li>
+        }
+
+    </ul>
+</section>
+
